@@ -16,7 +16,7 @@ class UR_Ctrl(object):
     def __init__(self):
         print("start")
         self.robot = urx.URRobot("192.168.10.121", use_rt=False)
-        self.HOST = '192.168.10.122'
+        self.HOST = 'localhost'
         self.PORT = 9999
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -39,6 +39,18 @@ class UR_Ctrl(object):
         self.nextpose = [0, -0.5, 0.5, 0, 3.14, 0]
         self.robot.movel(self.nextpose, acc = self.acceleration, vel=self.velocity, wait = True)
         self.getinfo() 
+
+    def sensorcheck(self):
+        print("sensor check")
+        self.robot.set_digital_out(7, True)
+        self.sensor = self.robot.get_digital_in(7)
+        while self.sensor == False:
+            self.sensor = self.robot.get_digital_in(7)
+
+            if self.sensor == True:
+                print("get box")
+                break
+            
 
     def movetobottle(self) :
         print("movetobottle")

@@ -3,7 +3,7 @@ import socket
 
 i=0
 HOST = 'localhost'  
-PORT = 9976
+PORT = 9999
 ok = 0
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
