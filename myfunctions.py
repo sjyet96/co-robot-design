@@ -13,10 +13,11 @@ class UR_Ctrl(object):
     velocity = 0.2
     i=0
     nextpose=[0,0,0,0,0,0]
+    flag = 0
     def __init__(self):
         print("start")
         self.robot = urx.URRobot("192.168.10.121", use_rt=False)
-        self.HOST = 'localhost'
+        self.HOST = '192.168.10.100'
         self.PORT = 9999
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -77,10 +78,10 @@ class UR_Ctrl(object):
 
     def putdownbottle(self) :
         print("movetobox")
-        self.robot.down(z=0.295,acc= 0.1, vel=0.1)
+        self.robot.down(z=0.285,acc= 0.1, vel=0.1)
         self.getinfo()
       #  self.ctrl_gripper.gripper_ctrl(self.ctrl_gripper.GRIPPER_OPEN,0.5)
-        self.robot.up(z=0.295,acc= 0.1, vel=0.1)
+        self.robot.up(z=0.285,acc= 0.1, vel=0.1)
         self.getinfo()
       #  self.ctrl_gripper.gripper_ctrl(self.ctrl_gripper.GRIPPER_CLOSE,0.5)
 
@@ -141,8 +142,15 @@ class UR_Ctrl(object):
                 self.robot.movel(self.nextpose, acc = 0.05, vel=0.05, wait = True)
                 print("move next")
                 if self.temppose[2] == 'ok' :
-                    self.finalpose = [self.nextpose[0]+0.03,self.nextpose[1]-60.8/1000,self.nextpose[2],self.nextpose[3],self.nextpose[4],self.nextpose[5]]
-                    self.robot.movel(self.finalpose, acc = 0.05, vel=0.05, wait = True)
+                    if flag == 0:
+                        self.finalpose = [self.nextpose[0]+0.03,self.nextpose[1]-0.0608-0.0245,self.nextpose[2],self.nextpose[3],self.nextpose[4],self.nextpose[5]]
+                        self.robot.movel(self.finalpose, acc = 0.05, vel=0.05, wait = True)
+                        flag = 1
+                    
+                    elif flag == 1:
+                        self.finalpose = [self.nextpose[0]+0.03,self.nextpose[1]-0.0608+0.0245,self.nextpose[2],self.nextpose[3],self.nextpose[4],self.nextpose[5]]
+                        self.robot.movel(self.finalpose, acc = 0.05, vel=0.05, wait = True)
+                        flag = 0
                     break
 
 
